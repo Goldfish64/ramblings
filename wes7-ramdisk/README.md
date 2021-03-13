@@ -16,6 +16,7 @@ Open the grub4dos binary in a hex editor, and replace the embedded script at off
 * Configure a separate disk large enough for the VHDs and grub4dos. This disk should have a single, active NTFS partition.
 * Place the modified grub4dos binary at the root of the drive named `bootmgr`.
 * Create a **fixed-size** VHD on the drive initialized as MBR and with a single partition of any type. This partition will be deleted during WES 7 setup. The size of the VHD should be at least 4GB for this configuration, but may need to be larger if more components are desired.
+
 ![](vhd-init.png)
 ![](vhd-part.png)
 * Copy the Windows Embedded Standard 7 x86 IBW ISO to the root of the disk.
@@ -31,12 +32,16 @@ Open the grub4dos binary in a hex editor, and replace the embedded script at off
     * `chainloader (0xff)`
     * `boot`
 * The system should now boot to the WES 7 IBW.
+
 ![](wes-boot.png)
 * Open a command prompt with Shift+F10 and run `instx86` from the `SVBus\bin` directory on the physical disk containing the drivers and VHDs.
+
 ![](svbus-load.png)
 * Verify the disk appears in `diskpart` and clean the disk.
+
 ![](svbus-clear.png)
 * Run setup and install Windows to the VHD. During partition creation, enable separate system partition to prevent boot files from being captured in the WIM later on.
+
 ![](wes-install.png)
 * After each reboot map the VHD and boot the system, where `wes.vhd` is the VHD.
     * `find --set-root /wes.vhd`
@@ -70,6 +75,7 @@ Open the grub4dos binary in a hex editor, and replace the embedded script at off
     * `select disk X`
     * `select part 1`
     * `set id=17`
+
 ![](vhd-final-part.png)
 
 ## VHD compression (optional)
