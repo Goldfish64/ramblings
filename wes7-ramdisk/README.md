@@ -8,6 +8,9 @@ Basic setup of WES 7 running from an SVBus VHD, either from disk or from RAM usi
 * [Grub4dos](https://github.com/chenall/grub4dos) - 0.4.6a used here
 * [Wimlib](https://wimlib.net/) - v1.13.3 used here
 * [lz4_compressor](http://reboot.pro/index.php?showtopic=22062)
+* [Sample answer file](MiniWES7.xml)
+* [WimBootCompress.ini](WimBootCompress.ini)
+* [wof.bat](wof.bat)
 
 ## Grub4dos configuration
 Open the grub4dos binary in a hex editor, and replace the embedded script at offset 0x50988 with `commandline`.
@@ -17,8 +20,8 @@ Open the grub4dos binary in a hex editor, and replace the embedded script at off
 * Place the modified grub4dos binary at the root of the drive named `bootmgr`.
 * Create a **fixed-size** VHD on the drive initialized as MBR and with a single partition of any type. This partition will be deleted during WES 7 setup. The size of the VHD should be at least 4GB for this configuration, but may need to be larger if more components are desired.
 
-![](vhd-init.png)
-![](vhd-part.png)
+![](images/vhd-init.png)
+![](images/vhd-part.png)
 * Copy the Windows Embedded Standard 7 x86 IBW ISO to the root of the disk.
 * Copy the SVBus driver to the \SVBus folder on the disk.
 
@@ -33,16 +36,16 @@ Open the grub4dos binary in a hex editor, and replace the embedded script at off
     * `boot`
 * The system should now boot to the WES 7 IBW.
 
-![](wes-boot.png)
+![](images/wes-boot.png)
 * Open a command prompt with Shift+F10 and run `instx86` from the `SVBus\bin` directory on the physical disk containing the drivers and VHDs.
 
-![](svbus-load.png)
+![](images/svbus-load.png)
 * Verify the disk appears in `diskpart` and clean the disk.
 
-![](svbus-clear.png)
+![](images/svbus-clear.png)
 * Run setup and install Windows to the VHD. During partition creation, enable separate system partition to prevent boot files from being captured in the WIM later on.
 
-![](wes-install.png)
+![](images/wes-install.png)
 * After each reboot map the VHD and boot the system, where `wes.vhd` is the VHD.
     * `find --set-root /wes.vhd`
     * `map /wes.vhd (hd0)`
@@ -76,7 +79,7 @@ Open the grub4dos binary in a hex editor, and replace the embedded script at off
     * `select part 1`
     * `set id=17`
 
-![](vhd-final-part.png)
+![](images/vhd-final-part.png)
 
 ## VHD compression (optional)
 The VHD can be compressed with LZ4 if desired to take up less space on disk. This compressed VHD can only be used in ramdisk mode, file-backed VHDs require the uncompressed VHD to be mapped. See http://reboot.pro/index.php?showtopic=22062.
@@ -99,3 +102,6 @@ Boot the target system into grub4dos, where `wesram.vhd` is the VHD containing t
 * `boot`
 
 The `grub4dos` binary can be configured with either of the above scripts to automatically boot the desired configuration. See [above](#Grub4dos-configuration).
+
+# Credits
+* Scripts based on https://wimlib.net/forums/viewtopic.php?p=632#p632
